@@ -1,0 +1,321 @@
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+
+missing_values=["N/a","Not Applicable","na","",np.nan]
+
+df=pd.read_excel(r"C:\Users\User\Desktop\Machine Learning\MF AFRICA\Book1.xlsx",na_values=missing_values)
+
+df
+
+df.columns
+
+df.info()
+
+df.columns
+
+
+df=df[[ 'id','operation','sending_partner', 'receiving_partner', 
+        
+        'send_amount',
+ 'flag', 'receive_amount',
+         'transaction_datetime']]
+
+df.head()
+
+df.isna().sum()
+
+df[df["flag"].isnull()].tail()
+
+df.isnull().sum()
+
+df[df["receive_amount"].isnull()]
+
+df.head()
+
+df.tail()
+
+df.dropna(axis=0,inplace=True)
+
+df["flag"].fillna("Not Applicable",inplace=True)
+df["status_of_receiving_account"].fillna("Not Applicable",inplace=True)
+
+df.isnull().sum()
+
+df
+
+df.isnull().sum()
+
+df.describe()
+
+df[df["flag"].isnull()]
+
+df[df["flag"].isna()]
+
+df["flag"].value_counts()
+
+df
+
+df.isnull().sum()
+
+df.head()
+
+dup_df=df.duplicated().any()
+print("Are there any mssing values?",dup_df)
+
+df=df.drop_duplicates()
+
+df.duplicated().any()
+
+df.isnull().sum()
+
+df.dropna(axis=0)
+
+df.isnull().any()
+
+df=df[df["flag"].isnull()]
+
+df.dropna()
+
+df.tail()
+
+df["flag"].fillna("Not Applicable",inplace=True)
+df["receiving_partner"].fillna("Not Applicable",inplace=True)
+df["send_amount"].fillna("Not Applicable",inplace=True)
+df["receive_amount"].fillna("Not Applicable",inplace=True)
+df["transaction_datetime"].fillna("Not Applicable",inplace=True)
+df["sending_partner"].fillna("Not Applicable",inplace=True)
+df["status_of_receiving_account"].fillna("Not Applicable",inplace=True)
+
+df.isna().sum()
+
+df["transaction_datetime"].tail(10)
+
+df.describe(include="all")
+
+df["status_of_receiving_account"].value_counts()	
+
+df["flag"].value_counts()
+
+pd.DataFrame(df["flag"].value_counts()).plot(kind="bar",figsize=(20,10))
+
+pd.DataFrame(df["receiving_partner"].value_counts()).plot(kind="bar",figsize=(20,10))
+
+df.dtypes
+
+
+
+pd.DataFrame(df["sending_partner"].value_counts()).plot(kind="bar",figsize=(20,10))
+
+df=df[df["flag"]=="Success"]
+df.groupby("receive_amount").mean()
+
+df.dtypes
+
+df.nlargest(10,"receive_amount")[["receiving_partner","receive_amount"]]\
+.set_index("receiving_partner")
+
+pd.DataFrame(df["receive_amount"].sum()).plot(kind="bar",figsize=(20,10))
+plt.xlabel("Receiving Partners")
+plt.legend("receiving_partner")
+plt.show()
+
+sns.heatmap(df.corr())
+
+df.groupby("sending_partner")["send_amount"].mean().sort_values(ascending=False).head(10)
+
+kj=df.groupby("receiving_partner")["receive_amount"].mean().sort_values(ascending=False)
+
+kj
+
+df.describe()
+
+df[df["receive_amount"]>=1000000]["receiving_partner"]
+
+df.describe(
+)
+
+plt.figure(figsize=(12,6))
+cond=df["send_amount"].sum()>=2.600233e+04
+sns.barplot(y=df["receiving_partner"],x=df["receive_amount"])
+xlim=plt.xlim()
+plt.xlim(xlim)
+plt.xlabel("Received amount (in million of Rands)")
+plt.ylabel("")
+plt.yticks(rotation=0.5)
+plt.title("Receiving Partner by received amount")
+plt.show()
+
+loop=df.groupby("receiving_partner")["receive_amount"].mean()
+
+loop.head()
+
+df.groupby("receiving_partner")["flag"].value_counts().sort_values(ascending=False).head(10
+)
+
+df.groupby("sending_partner")["flag"].value_counts().sort_values(ascending=False).tail()
+
+df.groupby("sending_partner")["flag"].value_counts().sort_values(ascending=False).head()
+
+pd.DataFrame(df["receiving_partner"].value_counts()).plot(kind="bar",figsize=(20,10))
+
+df.columns
+
+df.groupby("operation")["send_amount"].sum()
+
+plt.figure(figsize=(12,6))
+sns.barplot(y=df["operation"].sort_values(ascending=False),x=df["send_amount"])
+plt.title("Operation by sent amount")
+plt.show()
+
+df.groupby("operation")["receive_amount"].sum()
+
+plt.figure(figsize=(12,6))
+sns.barplot(y=df["operation"],x=df["receive_amount"].sort_values(ascending=False))
+plt.xlabel("Received amounts in (Rands)")
+plt.ylabel("Operations")
+plt.yticks(rotation=60
+           
+          )
+plt.title("Operation by received amount")
+plt.show()
+
+df.groupby("operation")["flag"].value_counts()
+
+df.columns
+
+df.groupby('transaction_datetime')['sending_partner'].value_counts()
+
+bar=plt.bar(df["operation"],df["operation"].value_counts())
+bar[0].set_hatch("/")
+bar[1].set_hatch("*")
+bar[2].set_hatch("-")
+bar[3].set_hatch("|")
+bar[4].set_hatch("")
+plt.xlabel("MFS Operations")
+plt.xticks(rotation=0)
+plt.ylabel("Count of transactions per operation")
+plt.title("Number of transactions by operation")
+plt.legend()
+plt.show()
+
+data=df.groupby("sending_partner")["send_amount"==>2.524393e+04]
+
+data.head()
+
+cond=df["send_amount"].mean()>2.524393e+04
+plt.bar(df["send_amount"].mean()[cond==False],df["sending_partner"][cond==False])
+plt.ylim(ylim)
+plt.xlim(xlim)
+plt.show()
+
+
+df.columns
+
+plt.figure(figsize=(12,6))
+sns.barplot(y=df["receiving_partner"],x=df["receive_amount"])
+xlim=plt.xlim()
+plt.xlim(xlim)
+plt.xlabel("Received amount (in million of Rands)")
+plt.ylabel("")
+plt.yticks(rotation=0.5)
+plt.title("Receiving Partner by received amount")
+plt.show()
+
+place_df=pd.DataFrame(df["sending_partner"],df["send_amount"])
+
+df.describe()
+
+place_df
+
+df[df["send_amount"].mean()>=2.524393e+04]["sending_partner"]
+
+big_transact=df[df["send_amount"]>2.524393e+04]
+
+big_transact.
+
+data=df[df["flag"]=="Success"]
+
+data
+
+data.groupby("sending_partner")["send_amount"].describe()
+
+data.groupby("receiving_partner")["receive_amount"].describe()
+
+df.describe()
+
+non_zero=df[df["send_amount"]>2.524393e+04]
+
+non_zero
+
+
+plt.figure(figsize=(12,6))
+sns.barplot(x="send_amount",y="sending_partner",data=non_zero)
+xlim=plt.xlim()
+plt.title("Plot of the sums of send partner amounts that were above average")
+plt.xlabel("Partner send amounts (in Thousand of Rands)")
+plt.ylabel("Send partners")
+plt.show()
+
+nn_zero=df[df["receive_amount"]>4.408000e+04]
+
+nn_zero
+
+plt.figure(figsize=(20,10))
+sns.barplot(x="receive_amount",y="receiving_partner",data=nn_zero)
+xlim=plt.xlim()
+plt.title("Plot of the sums of receive partner amounts that were above average")
+plt.xlabel("Partner receive amounts (in Thousand of Rands)")
+plt.ylabel("Receive partners")
+plt.show()
+
+suc_data=df[df["flag"]=="Success"]
+
+suc_data.groupby("sending_partner")["send_amount"].describe()
+
+suc_data.describe()
+
+nw=suc_data[suc_data["send_amount"]>]
+
+
+
+plt.figure(figsize=(20,10))
+sns.barplot(x="send_amount",y="sending_partner",data=suc_data)
+xlim=plt.xlim()
+plt.title("Plot of the sums of successful send partner amounts")
+plt.xlabel("Partner send amounts (in Thousand of Rands)")
+plt.ylabel("Send partners")
+plt.show()
+
+fail_data=df[df["flag"]=="Fail"]
+
+fail_data
+
+plt.figure(figsize=(20,10))
+sns.barplot(x="send_amount",y="sending_partner",data=fail_data)
+xlim=plt.xlim()
+plt.title("Plot of the sums of fail send partner amounts that were above average")
+plt.xlabel("Partner send amounts (in Thousand of Rands)")
+plt.ylabel("Send partners")
+plt.show()
+
+data2=suc_data.groupby("sending_partner")["send_amount"].mean()
+
+data2
+
+data3=data2[data2>6.699600e+04]
+
+data3
+
+data3.plot(kind="bar",figsize=(20,10))
+
+plt.figure(figsize=(20,10))
+data3.plot(kind="bar",figsize=(20,10))
+xlim=plt.xlim()
+plt.title("Plot of the sums of fail send partner amounts that were above average")
+plt.xlabel("Partner send amounts (in Thousand of Rands)")
+plt.xticks(rotation=20)
+plt.ylabel("Send partners")
+plt.show()
+
