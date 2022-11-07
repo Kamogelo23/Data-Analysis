@@ -1,0 +1,77 @@
+import glob
+import pandas as pd
+import numpy as np
+import camelot
+
+### Load data
+
+# load data
+def load_data(path):
+    files = glob.glob(path)
+    data = []
+    for file in files:
+        tables = camelot.read_pdf(file, pages='20-40',flavor='stream')
+        data.append(tables)
+    return files,data
+
+### Search for table of interest
+
+# search for table of interest
+def search(tables):
+    table_of_interest = None
+    for table in tables:
+        df = table.df
+        try:
+            indicator = df.at[1,1]
+            # extra column
+            if indicator.lower().strip() == 'salient features*':
+                table_of_interest = df.iloc[:,1:]
+                table_of_interest.columns = [i for i in range(len(table_of_interest.columns))]
+                metadata = table.parsing_report
+            else:
+                # no extra column
+                indicator = df.at[1,0]
+                if indicator.lower().strip() == 'salient features*':
+                    table_of_interest = df
+                    metadata = table.parsing_report
+
+        except:
+            pass
+        
+    if table_of_interest is not None:
+        return {'metadata':metadata,'table':table_of_interest}
+    
+    return None
+
+### Clean detected table
+
+def clean(table):
+    df = table.copy()
+    year = df.at[3,1][:4]
+    # drop first 4 things and other extra cols
+    df = df.iloc[4:-1,0:4]
+    df = df.replace('',np.nan)
+    df.dropna(how='all',inplace=True)
+    df['reporting_year'] = int(year)
+    return df
+
+### Pipeline
+- Combines above steps
+
+metadat,data = load_data('data/*.pdf')
+
+def pipeline(data):
+    combined_data = []
+    for i in range(len(data)):
+        result = search(data[i])
+        if result is not None:
+            t = result['table']
+            t = clean(t)
+            combined_data.append(t)
+            # t.to_csv(metadata[i].replace('.pdf','.csv'),index=False)
+    df = pd.concat(combined_data)
+    df.to_csv('full.csv',index=False)
+    return df
+
+pipeline(data)
+
